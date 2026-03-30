@@ -1,7 +1,7 @@
 -- 1. 사용자 테이블 생성
 CREATE TABLE users (
                        user_id SERIAL PRIMARY KEY,
-                       student_no VARCHAR(20) NOT NULL UNIQUE,
+                       student_no VARCHAR(20) NOT NULL,
                        name VARCHAR(50) NOT NULL,
                        email VARCHAR(100),
                        phone VARCHAR(20)
@@ -19,7 +19,7 @@ CREATE TABLE membership (
                             user_id INTEGER NOT NULL,
                             club_id INTEGER NOT NULL,
                             role VARCHAR(20),
-                            joined_date DATE DEFAULT CURRENT_DATE,
+                            joined_date DATE NOT NULL,
 
                             PRIMARY KEY (user_id, club_id),
 
@@ -49,3 +49,32 @@ VALUES
     (1, 1, '회장', '2025-03-05'),
     (1, 2, '일반회원', '2025-03-10'),
     (2, 1, '일반회원', '2025-03-06');
+
+
+
+-- 데이터 조회
+
+SELECT u.name, c.club_name, m.role, m.joined_date
+FROM users u
+JOIN membership m ON u.user_id = m.user_id
+JOIN club c ON m.club_id = c.club_id;
+
+-- 데이터 업데이트
+UPDATE users 
+SET phone = '010-0000-0000' 
+WHERE student_no = '20210001';
+
+UPDATE membership 
+SET role = '부회장' 
+WHERE user_id = 2 AND club_id = 1;
+
+-- 데이터 삭제
+DELETE FROM membership 
+WHERE user_id = 1 AND club_id = 2;
+
+DELETE FROM users 
+WHERE student_no = '20210002';
+
+-- 결과 최종 확인
+SELECT * FROM users;
+SELECT * FROM membership;
